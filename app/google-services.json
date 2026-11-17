@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "574676476252",
+    "project_id": "notifyhub-884ed",
+    "storage_bucket": "notifyhub-884ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574676476252:android:1f8e5e4079121f86eae199",
+        "android_client_info": {
+          "package_name": "com.izooto.notifyhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVlyHhSXC_O0bPdPAQX_2_r_CiyNgjLLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
