@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
 
 }
 
@@ -75,7 +76,8 @@ dependencies {
     // Image loading
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-    // Android notifications
-    implementation("androidx.core:core-ktx:1.17.0")
+}
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
