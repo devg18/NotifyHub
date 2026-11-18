@@ -4,23 +4,44 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.izooto.notifyhub.ui.theme.NotifyHubTheme
+import com.izooto.notifyhub.ui.permissions.NotificationPermissionHandler
+import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        fetchFcmToken()
+
         setContent {
             NotifyHubTheme {
 
+                NotificationPermissionHandler()
             }
         }
     }
+
+    private fun fetchFcmToken() {
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.e(
+                        "NotifyHubFCM",
+                        "Failed to retrieve FCM token",
+                        task.exception
+                    )
+                    return@addOnCompleteListener
+                }
+
+                val token = task.result
+
+                Log.d(
+                    "NotifyHubFCM",
+                    "FCM Registration Token: $token"
+                )
+            }
+    }
+
 }
