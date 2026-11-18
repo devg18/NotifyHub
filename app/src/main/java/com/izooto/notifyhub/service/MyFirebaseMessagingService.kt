@@ -9,6 +9,7 @@ import com.izooto.notifyhub.data.repository.NotificationRepository
 import com.izooto.notifyhub.notification.NotificationHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import android.net.Uri
 import java.util.UUID
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -25,16 +26,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
 
         try {
-
             val data = remoteMessage.data
 
-            // Read notification payload
             val notificationId = data["id"]
-                ?.takeIf { it.isNotBlank() }
+                ?.trim()
+                ?.takeIf { it.isNotEmpty() }
                 ?: UUID.randomUUID().toString()
 
-            val title = data["title"]?.takeIf { it.isNotBlank() }
+            val title = data["title"]
+                ?.trim()
+                ?.takeIf { it.isNotEmpty() }
                 ?: remoteMessage.notification?.title
+                    ?.takeIf { it.isNotBlank() }
                 ?: "New Notification"
 
             val description = data["description"]
@@ -42,11 +45,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 ?: ""
 
             val bannerImg = data["bannerImg"]
-                ?.takeIf { it.isNotBlank() }
+                ?.trim()
+                ?.takeIf { url ->
+                    url.isNotEmpty() &&
+                            runCatching {
+                                val uri = Uri.parse(url)
+                                uri.scheme in listOf("http", "https") &&
+                                        !uri.host.isNullOrBlank()
+                            }.getOrDefault(false)
+                }
 
             val timestamp = data["timestamp"]
                 ?.toLongOrNull()
+                ?.takeIf { it > 0L }
                 ?: System.currentTimeMillis()
+
 
             val notification = NotificationEntity(
                 id = notificationId,
